@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-100">
-    <div class="font-bold text-red-500">TEST SEARCH BAR</div>
+    
     <!-- Search Bar -->
     <div class="relative z-20 flex justify-center w-full">
       <div
