@@ -76,19 +76,32 @@
 
       <!-- Authentication -->
       <div class="flex items-center flex-shrink-0 gap-6 ml-8">
-        <nuxt-link
-          to="/login"
-          class="py-[10px] flex items-center justify-center text-center font-inter font-medium text-[16px] text-[#F62E56] cursor-pointer"
-        >
-          Đăng nhập
-        </nuxt-link>
-        <div class="w-px h-6 bg-[#E4E4E7]"></div>
-        <nuxt-link
-          to="/register"
-          class="py-[10px] flex items-center justify-center text-center px-6 bg-[#F62E56] rounded-lg text-white font-inter font-medium text-[16px] cursor-pointer"
-        >
-          Đăng ký
-        </nuxt-link>
+        <template v-if="!currentUser">
+          <nuxt-link
+            to="/login"
+            class="py-[10px] flex items-center justify-center text-center font-inter font-medium text-[16px] text-[#F62E56] cursor-pointer"
+          >
+            Đăng nhập
+          </nuxt-link>
+          <div class="w-px h-6 bg-[#E4E4E7]"></div>
+          <nuxt-link
+            to="/register"
+            class="py-[10px] flex items-center justify-center text-center px-6 bg-[#F62E56] rounded-lg text-white font-inter font-medium text-[16px] cursor-pointer"
+          >
+            Đăng ký
+          </nuxt-link>
+        </template>
+        <template v-else>
+          <span class="font-inter text-[16px] text-[#F62E56] font-semibold">
+            {{ currentUser.name || currentUser.email }}
+          </span>
+          <button
+            @click="logout"
+            class="py-[10px] px-6 bg-[#F62E56] rounded-lg text-white font-inter font-medium text-[16px] cursor-pointer"
+          >
+            Đăng xuất
+          </button>
+        </template>
       </div>
     </div>
   </nav>
@@ -96,19 +109,36 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const isScrolled = ref(false)
+const currentUser = ref(null)
+const router = useRouter()
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 4
 }
 
+function checkLogin() {
+  const user = localStorage.getItem('currentUser')
+  currentUser.value = user ? JSON.parse(user) : null
+}
+
+function logout() {
+  localStorage.removeItem('currentUser')
+  currentUser.value = null
+  router.push('/')
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  checkLogin()
+  window.addEventListener('storage', checkLogin)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('storage', checkLogin)
 })
 </script>
 

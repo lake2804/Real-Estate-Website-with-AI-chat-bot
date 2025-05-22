@@ -1,23 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
-    <div class="flex items-center justify-center min-h-screen">
-      <nuxt />
-    </div>
+  <div class="min-h-screen flex items-center justify-center bg-[#f5f8ff]">
+    <slot />
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AuthLayout',
-  mounted() {
-    console.log('Auth layout is being used');
-  },
-  created() {
-    this.$nuxt.$emit('set-layout', 'auth');
-  }
-};
+<script setup>
+// Không cần gì thêm
 </script>
 
 <style scoped>
-/* Thêm style nếu cần */
+/* Có thể thêm style nếu muốn */
 </style>

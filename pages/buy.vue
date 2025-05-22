@@ -1,8 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen bg-gray-100">
-    
     <!-- Search Bar -->
-    <div class="relative z-20 flex justify-center w-full">
+    <div class="relative z-20 flex justify-center w-full mt-[100px]">
       <div
         class="flex items-center w-full max-w-5xl px-2 py-2 bg-white border rounded-full shadow-xl border-stone-100 md:py-3"
         style="box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10);"
@@ -11,26 +10,10 @@
         <div class="flex items-center justify-center mr-2">
           <div class="relative flex w-[180px] h-12 bg-[#F4F4F5] rounded-full p-1">
             <button
-              :class="[
-                'flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200',
-                searchTab === 'Mua nhà'
-                  ? 'bg-[#F62E56] text-white shadow'
-                  : 'bg-transparent text-[#6B7280]'
-              ]"
-              @click="searchTab = 'Mua nhà'"
+              class="flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200 bg-[#F62E56] text-white shadow"
+              disabled
             >
               Mua nhà
-            </button>
-            <button
-              :class="[
-                'flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200',
-                searchTab === 'Thuê nhà'
-                  ? 'bg-[#F62E56] text-white shadow'
-                  : 'bg-transparent text-[#6B7280]'
-              ]"
-              @click="searchTab = 'Thuê nhà'"
-            >
-              Thuê nhà
             </button>
           </div>
         </div>
@@ -42,6 +25,7 @@
             placeholder="Tìm kiếm căn hộ"
             class="w-full text-base bg-transparent font-inter focus:outline-none"
             autocomplete="off"
+            @keyup.enter="handleSearch"
           />
         </div>
         <!-- Dropdowns custom -->
@@ -100,7 +84,7 @@
     <div class="container px-4 py-6 mx-auto max-w-7xl">
       <div class="mb-4 text-gray-700 font-inter">
         <span class="font-semibold">{{ totalResults }}</span> kết quả tìm kiếm cho
-        <span class="font-semibold text-[#F62E56]">"{{ searchTab }} {{ searchValues.location !== 'Vị trí' ? searchValues.location : '' }}"</span>
+        <span class="font-semibold text-[#F62E56]">"Mua nhà {{ searchValues.location !== 'Vị trí' ? searchValues.location : '' }}"</span>
       </div>
       <!-- Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -147,7 +131,6 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 // Search bar state
-const searchTab = ref('Mua nhà')
 const keyword = ref('')
 const dropdownOpen = ref(null)
 const searchValues = ref({
@@ -206,7 +189,7 @@ const properties = ref(
     direction: ['Tây Nam', 'Đông Bắc', 'Nam', 'Bắc'][i % 4],
     block: ['Block A', 'Block B', 'Block C'][i % 3],
     price: [4000000, 7000000, 12000000, 18000000, 23000000][i % 5],
-    type: i % 2 === 0 ? 'rent' : 'sale'
+    type: 'sale'
   }))
 )
 
@@ -216,7 +199,6 @@ const pageSize = 12
 const filteredProperties = computed(() => {
   // Lọc theo search bar
   let list = properties.value.filter((p) => {
-    const matchTab = searchTab.value === 'Mua nhà' ? p.type === 'sale' : p.type === 'rent'
     const matchKeyword = !keyword.value || p.name.toLowerCase().includes(keyword.value.toLowerCase())
     const matchLocation = searchValues.value.location === 'Vị trí' || p.location === searchValues.value.location
     const matchPrice =
@@ -231,7 +213,7 @@ const filteredProperties = computed(() => {
       (searchValues.value.rooms === '2 phòng' && p.bedrooms === 2) ||
       (searchValues.value.rooms === '3 phòng' && p.bedrooms === 3) ||
       (searchValues.value.rooms === '4+ phòng' && p.bedrooms >= 4)
-    return matchTab && matchKeyword && matchLocation && matchPrice && matchRooms
+    return matchKeyword && matchLocation && matchPrice && matchRooms
   })
   totalResults.value = list.length
   return list
@@ -258,5 +240,11 @@ function handleSearch() {
 <style scoped>
 .font-inter {
   font-family: "Inter", sans-serif;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
