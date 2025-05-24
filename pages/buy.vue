@@ -86,26 +86,13 @@
         <span class="font-semibold">{{ totalResults }}</span> kết quả tìm kiếm cho
         <span class="font-semibold text-[#F62E56]">"Mua nhà {{ searchValues.location !== 'Vị trí' ? searchValues.location : '' }}"</span>
       </div>
-      <!-- Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <div
+        <PropertyCard
           v-for="property in paginatedProperties"
           :key="property.id"
-          class="flex flex-col p-4 transition bg-white shadow rounded-xl hover:shadow-lg"
-        >
-          <img :src="property.image" class="object-cover mb-3 rounded-lg aspect-video" />
-          <div class="mb-2 text-base font-semibold font-inter line-clamp-2">{{ property.name }}</div>
-          <div class="mb-1 text-sm text-gray-500 font-inter">{{ property.location }}</div>
-          <div class="flex flex-wrap gap-2 mb-2 text-xs text-gray-500">
-            <span>{{ property.bedrooms }}PN/{{ property.bathrooms }}WC</span>
-            <span>{{ property.area }}m²</span>
-            <span>{{ property.direction }}</span>
-            <span>{{ property.block }}</span>
-          </div>
-          <div class="mt-auto font-inter font-semibold text-[#F62E56]">
-            {{ property.price.toLocaleString() }} VNĐ <span class="text-xs font-normal text-gray-500">/tháng</span>
-          </div>
-        </div>
+          :product="property"
+          :to="`/buy/${property.id}`"
+        />
       </div>
       <!-- Pagination -->
       <div class="flex justify-center mt-8">
@@ -124,11 +111,27 @@
         </nav>
       </div>
     </div>
+
+    <!-- Danh sách căn hộ bán -->
+    <div class="container py-8 mx-auto">
+      <h2 class="mb-4 text-2xl font-bold">Danh sách căn hộ bán</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <PropertyCard
+          v-for="property in filteredProperties"
+          :key="property.id"
+          :product="property"
+          :to="`/buy/${property.id}`"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { properties } from '~/data/properties'
+import PropertyCard from '~/components/PropertyCard.vue'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+
 
 // Search bar state
 const keyword = ref('')
@@ -177,28 +180,12 @@ onBeforeUnmount(() => {
 })
 
 // Fake property data (36 items for 3 pages)
-const properties = ref(
-  Array.from({ length: 36 }, (_, i) => ({
-    id: i + 1,
-    name: `Căn hộ ${i + 1} Vinhomes Central Park`,
-    image: `https://picsum.photos/seed/apt${i + 1}/400/225`,
-    location: ['Quận 9, TP.HCM', 'Quận 5, TP.HCM', 'Quận 2, TP.HCM'][i % 3],
-    bedrooms: [1, 2, 3, 4][i % 4],
-    bathrooms: [1, 2][i % 2],
-    area: [67, 77, 88, 120][i % 4],
-    direction: ['Tây Nam', 'Đông Bắc', 'Nam', 'Bắc'][i % 4],
-    block: ['Block A', 'Block B', 'Block C'][i % 3],
-    price: [4000000, 7000000, 12000000, 18000000, 23000000][i % 5],
-    type: 'sale'
-  }))
-)
-
 const currentPage = ref(1)
 const pageSize = 12
 
 const filteredProperties = computed(() => {
   // Lọc theo search bar
-  let list = properties.value.filter((p) => {
+  let list = properties.filter((p) => {
     const matchKeyword = !keyword.value || p.name.toLowerCase().includes(keyword.value.toLowerCase())
     const matchLocation = searchValues.value.location === 'Vị trí' || p.location === searchValues.value.location
     const matchPrice =

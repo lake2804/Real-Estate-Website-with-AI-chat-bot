@@ -97,7 +97,7 @@
             >
               <button
                 @click="toggleDropdown(field.model)"
-                class="flex items-center gap-2 bg-transparent focus:outline-none min-w-[110px] h-12"
+                class="flex items-center gap-2 bg-transparent focus:outline-none min-w-[110px] h-12 cursor-pointer"
                 :class="{
                   'text-[#F62E56] font-semibold': dropdownOpen === field.model || searchValues[field.model] !== field.options[0],
                   'text-gray-700': !(dropdownOpen === field.model) && searchValues[field.model] === field.options[0]
@@ -129,7 +129,7 @@
           <!-- Search Button -->
           <button
             @click="handleSearch"
-            class="flex items-center gap-2 h-10 px-6 ml-2 bg-[#F62E56] text-white font-semibold rounded-full hover:bg-[#d9254a] transition-colors duration-200 focus:outline-none"
+            class="flex items-center gap-2 h-10 px-6 ml-2 bg-[#F62E56] text-white font-semibold rounded-full hover:bg-[#d9254a] transition-colors duration-200 focus:outline-none cursor-pointer"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8" stroke-width="2"></circle>
@@ -166,7 +166,7 @@
             :key="index"
             @click="activeProjectTab = index"
             :class="[ 
-              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter',
+              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter cursor-pointer',
               activeProjectTab === index
                 ? 'border-red-500 text-red-500'
                 : 'border-transparent text-gray-500 hover:text-red-500',
@@ -261,7 +261,7 @@
             :key="index"
             @click="activeRentalTab = index"
             :class="[ 
-              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter',
+              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter cursor-pointer',
               activeRentalTab === index
                 ? 'border-red-500 text-red-500'
                 : 'border-transparent text-gray-500 hover:text-red-500',
@@ -274,78 +274,22 @@
 
       <!-- Rental Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div
-          v-for="(project, index) in filteredRentalProjects"
-          :key="index"
-          class="overflow-hidden transition-transform transform bg-white rounded-lg shadow-sm hover:-translate-y-2 hover:shadow-lg"
+        <!-- Hiển thị danh sách thuê nổi bật -->
+        <PropertyCard
+          v-for="property in properties.filter(p => p.type === 'rent').slice(0, 4)"
+          :key="property.id"
+          :product="property"
+          :to="`/rent/${property.id}`"
+          :isRent="true"
+        />
+      </div>
+      <div class="flex justify-center mt-8">
+        <NuxtLink
+          to="/rent"
+          class="px-6 py-2 text-sm font-medium border-2 border-[#F62E56] text-[#F62E56] bg-white rounded transition-colors hover:bg-[#F62E56] hover:text-white font-inter cursor-pointer"
         >
-          <!-- Property Image -->
-          <div class="relative h-48">
-            <img
-              :src="project.image"
-              :alt="project.name"
-              class="object-cover w-full h-full"
-            />
-            <!-- Badge -->
-            <span
-              v-if="project.badge"
-              class="absolute px-2 py-1 text-xs font-medium text-white bg-red-500 rounded top-2 left-2 font-inter"
-            >
-              {{ project.badge }}
-            </span>
-          </div>
-
-          <!-- Property Info -->
-          <div class="p-4">
-            <h3 class="mb-1 text-lg font-semibold text-gray-900 truncate font-inter">
-              {{ project.name }}
-            </h3>
-            <p class="flex items-center mb-3 text-sm text-gray-500 font-inter">
-              <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                <path
-                  d="M10 10a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM10 16.667c3.333-3.334 6.667-7.5 6.667-10a6.667 6.667 0 10-13.334 0c0 2.5 3.334 6.666 6.667 10z"
-                />
-              </svg>
-              <span class="truncate">{{ project.location }}</span>
-            </p>
-
-            <!-- Property Details -->
-            <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 font-inter">
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 17v-2h3v-3h3v-3h3V6h3V3h2v4h-3v3h-3v3H9v3H6v3H3z" />
-                </svg>
-                {{ project.bedrooms }} phòng ngủ
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 3h14v14H3V3zm2 2v10h10V5H5z" />
-                </svg>
-                {{ project.area }}
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path
-                    d="M3 3h4v4H3V3zm5 0h4v4H8V3zm5 0h4v4h-4V3zM3 8h4v4H3V8zm5 0h4v4H8V8zm5 0h4v4h-4V8zM3 13h4v4H3v-4zm5 0h4v4H8v-4zm5 0h4v4h-4v-4z"
-                  />
-                </svg>
-                {{ project.bathrooms }} phòng tắm
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 5h14v2H3V5zm0 4h14v2H3V9zm0 4h14v2H3v-2z" />
-                </svg>
-                {{ project.type }}
-              </div>
-            </div>
-
-            <!-- Price -->
-            <div class="flex items-center justify-between mt-3">
-              <span class="text-lg font-bold text-red-500 font-inter">{{ project.price }}</span>
-              <span class="text-sm text-gray-500 font-inter">/ tháng</span>
-            </div>
-          </div>
-        </div>
+          Xem thêm →
+        </NuxtLink>
       </div>
     </div>
 
@@ -362,7 +306,7 @@
             :key="index"
             @click="activeSaleTab = index"
             :class="[ 
-              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter',
+              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter cursor-pointer',
               activeSaleTab === index
                 ? 'border-red-500 text-red-500'
                 : 'border-transparent text-gray-500 hover:text-red-500',
@@ -375,78 +319,23 @@
 
       <!-- Sale Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div
-          v-for="(project, index) in filteredSaleProjects"
-          :key="index"
-          class="overflow-hidden transition-transform transform bg-white rounded-lg shadow-sm hover:-translate-y-2 hover:shadow-lg"
+        <!-- Hiển thị danh sách bán nổi bật -->
+        <PropertyCard
+          v-for="property in properties.filter(p => p.type === 'sale').slice(0, 4)"
+          :key="property.id"
+          :product="property"
+          :to="`/buy/${property.id}`"
+        />
+      </div>
+
+      <!-- View More Button -->
+      <div class="flex justify-center mt-8">
+        <NuxtLink
+          to="/buy"
+          class="px-6 py-2 text-sm font-medium border-2 border-[#F62E56] text-[#F62E56] bg-white rounded transition-colors hover:bg-[#F62E56] hover:text-white font-inter cursor-pointer"
         >
-          <!-- Property Image -->
-          <div class="relative h-48">
-            <img
-              :src="project.image"
-              :alt="project.name"
-              class="object-cover w-full h-full"
-            />
-            <!-- Badge -->
-            <span
-              v-if="project.badge"
-              class="absolute px-2 py-1 text-xs font-medium text-white bg-red-500 rounded top-2 left-2 font-inter"
-            >
-              {{ project.badge }}
-            </span>
-          </div>
-
-          <!-- Property Info -->
-          <div class="p-4">
-            <h3 class="mb-1 text-lg font-semibold text-gray-900 truncate font-inter">
-              {{ project.name }}
-            </h3>
-            <p class="flex items-center mb-3 text-sm text-gray-500 font-inter">
-              <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                <path
-                  d="M10 10a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM10 16.667c3.333-3.334 6.667-7.5 6.667-10a6.667 6.667 0 10-13.334 0c0 2.5 3.334 6.666 6.667 10z"
-                />
-              </svg>
-              <span class="truncate">{{ project.location }}</span>
-            </p>
-
-            <!-- Property Details -->
-            <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 font-inter">
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 17v-2h3v-3h3v-3h3V6h3V3h2v4h-3v3h-3v3H9v3H6v3H3z" />
-                </svg>
-                {{ project.bedrooms }} phòng ngủ
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 3h14v14H3V3zm2 2v10h10V5H5z" />
-                </svg>
-                {{ project.area }}
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path
-                    d="M3 3h4v4H3V3zm5 0h4v4H8V3zm5 0h4v4h-4V3zM3 8h4v4H3V8zm5 0h4v4H8V8zm5 0h4v4h-4V8zM3 13h4v4H3v-4zm5 0h4v4H8v-4zm5 0h4v4h-4v-4z"
-                  />
-                </svg>
-                {{ project.bathrooms }} phòng tắm
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="#6B7280">
-                  <path d="M3 5h14v2H3V5zm0 4h14v2H3V9zm0 4h14v2H3v-2z" />
-                </svg>
-                {{ project.type }}
-              </div>
-            </div>
-
-            <!-- Price -->
-            <div class="flex items-center justify-between mt-3">
-              <span class="text-lg font-bold text-red-500 font-inter">{{ project.price }}</span>
-              <span class="text-sm text-gray-500 font-inter">{{ project.priceUnit }}</span>
-            </div>
-          </div>
-        </div>
+          Xem thêm →
+        </NuxtLink>
       </div>
     </div>
 
@@ -463,7 +352,7 @@
             :key="index"
             @click="activeNewsTab = index"
             :class="[ 
-              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter',
+              'whitespace-nowrap pb-2 font-bold border-b-2 transition-colors font-inter cursor-pointer',
               activeNewsTab === index
                 ? 'border-red-500 text-red-500'
                 : 'border-transparent text-gray-500 hover:text-red-500',
@@ -508,7 +397,7 @@
             <!-- News Details -->
             <div class="flex items-center justify-between text-sm text-gray-400 font-inter">
               <span>{{ news.date }}</span>
-              <span class="flex items-center text-red-500">
+              <span class="flex items-center text-red-500 cursor-pointer">
                 Đọc tiếp
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -521,13 +410,37 @@
 
       <!-- View More Button -->
       <div class="flex justify-center mt-8">
-        <button
-          class="px-6 py-2 text-sm font-medium text-white transition-colors bg-red-500 rounded hover:bg-red-600 font-inter"
+        <NuxtLink
+        to="/news"
+          class="px-6 py-2 text-sm font-medium text-white transition-colors bg-red-500 rounded cursor-pointer hover:bg-red-600 font-inter"
         >
           Xem thêm →
-        </button>
+        </NuxtLink>
       </div>
     </div>
+
+    <!-- Danh sách bất động sản nổi bật -->
+    <section class="container py-8 mx-auto">
+      <h2 class="mb-4 text-2xl font-bold">Bất động sản cho thuê nổi bật</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <PropertyCard
+          v-for="property in properties.filter(p => p.type === 'rent').slice(0, 4)"
+          :key="property.id"
+          :product="property"
+          :to="`/rent/${property.id}`"
+          :isRent="true"
+        />
+      </div>
+      <h2 class="my-4 text-2xl font-bold">Bất động sản bán nổi bật</h2>
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <PropertyCard
+          v-for="property in properties.filter(p => p.type === 'sale').slice(0, 4)"
+          :key="property.id"
+          :product="property"
+          :to="`/buy/${property.id}`"
+        />
+      </div>
+    </section>
   </div>
 </template>
 
@@ -537,6 +450,8 @@ import image1 from "../assets/images/69c3287225c0955eae77611c48fe35842bc4c6fb.jp
 import image2 from "../assets/images/6b7d8bfad7fb4d36ecf330170d823a425da5a78c.png";
 import image3 from "../assets/images/a4a07cb3b7048da0103b09abd45180c16400b41e.png";
 import image4 from "../assets/images/bdcb37b73921618b978df14dba5c19e7ca664018.jpg";
+import { properties } from '~/data/properties'
+import PropertyCard from '~/components/PropertyCard.vue'
 
 // Inline DropdownSelect component
 const DropdownSelect = {
