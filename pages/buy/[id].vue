@@ -114,26 +114,28 @@
 </template>
 
 <script setup>
-import { properties } from '~/data/properties'
 import { useRoute } from 'vue-router'
 import PropertyCard from '~/components/PropertyCard.vue'
 import { ref, watch } from 'vue'
 
 const route = useRoute()
-const product = ref(null)
+const { data: product, pending, error } = await useFetch(`/api/properties/${route.params.id}`)
+
+// Lấy danh sách tất cả sản phẩm để gợi ý (hoặc bạn có thể tối ưu bằng API riêng)
+const { data: allProducts } = await useFetch('/api/properties')
+
 const relatedProducts = ref([])
 const activeImage = ref('')
 
-// Hàm cập nhật dữ liệu khi id thay đổi
-function updateProduct() {
-  const p = properties.find(p => p.id === Number(route.params.id))
-  product.value = p
-  relatedProducts.value = properties.filter(item => item.id !== p?.id && item.type === p?.type).slice(0, 4)
-  activeImage.value = p?.images?.[0] || p?.image || ''
-}
-
-// Gọi khi mounted và khi id thay đổi
-watch(() => route.params.id, updateProduct, { immediate: true })
+// Cập nhật relatedProducts khi product hoặc allProducts thay đổi
+watch([product, allProducts], () => {
+  if (product.value && allProducts.value) {
+    relatedProducts.value = allProducts.value
+      .filter(item => item.id !== product.value.id && item.type === product.value.type)
+      .slice(0, 4)
+    activeImage.value = product.value.images?.[0] || product.value.image || ''
+  }
+}, { immediate: true })
 
 watch(product, (val) => {
   if (val?.images?.length) {

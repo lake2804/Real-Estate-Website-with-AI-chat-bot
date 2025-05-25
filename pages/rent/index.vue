@@ -10,7 +10,7 @@
         <div class="flex items-center justify-center mr-2">
           <div class="relative flex w-[180px] h-12 bg-[#F4F4F5] rounded-full p-1">
             <button
-              class="flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200 bg-transparent text-[#6B7280]"
+              class="flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200 bg-[#F62E56] text-white shadow"
               disabled
             >
               Thuê nhà
@@ -86,14 +86,20 @@
         <span class="font-semibold">{{ totalResults }}</span> kết quả tìm kiếm cho
         <span class="font-semibold text-[#F62E56]">"Thuê nhà {{ searchValues.location !== 'Vị trí' ? searchValues.location : '' }}"</span>
       </div>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <PropertyCard
-          v-for="property in paginatedProperties"
-          :key="property.id"
-          :product="property"
-          :to="`/rent/${property.id}`"
-          :isRent="true"
-        />
+      <div v-if="pending">Đang tải...</div>
+      <div v-else-if="error">Lỗi tải dữ liệu!</div>
+      <div v-else>
+        <div v-if="paginatedProperties.length === 0" class="container py-20 text-xl font-bold text-center text-red-500">
+          Không tìm thấy sản phẩm!
+        </div>
+        <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <PropertyCard
+            v-for="property in paginatedProperties"
+            :key="property.id"
+            :product="property"
+            :to="`/rent/${property.id}`"
+          />
+        </div>
       </div>
       <!-- Pagination -->
       <div class="flex justify-center mt-8">
@@ -116,11 +122,9 @@
 </template>
 
 <script setup>
-import { properties } from '~/data/properties'
 import PropertyCard from '~/components/PropertyCard.vue'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-// Search bar state
 const keyword = ref('')
 const dropdownOpen = ref(null)
 const searchValues = ref({
@@ -142,8 +146,9 @@ const dropdownFields = [
     options: ['Số phòng', '1 phòng', '2 phòng', '3 phòng', '4+ phòng']
   }
 ]
+const currentPage = ref(1)
+const pageSize = 12
 
-// Dropdown logic
 function toggleDropdown(model) {
   dropdownOpen.value = dropdownOpen.value === model ? null : model
 }
@@ -166,13 +171,14 @@ onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleClickOutsideDropdown)
 })
 
-// Fake property data (36 items for 3 pages)
-const currentPage = ref(1)
-const pageSize = 12
+// Fetch properties data from API
+const { data: propertiesRaw, pending, error } = await useFetch('/api/properties')
+const properties = computed(() =>
+  Array.isArray(propertiesRaw.value) ? propertiesRaw.value.filter(p => p.type === 'rent') : []
+)
 
 const filteredProperties = computed(() => {
-  // Lọc theo search bar
-  let list = properties.filter((p) => {
+  let list = properties.value.filter((p) => {
     const matchKeyword = !keyword.value || p.name.toLowerCase().includes(keyword.value.toLowerCase())
     const matchLocation = searchValues.value.location === 'Vị trí' || p.location === searchValues.value.location
     const matchPrice =

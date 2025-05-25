@@ -2,43 +2,20 @@
   <div class="flex flex-col min-h-screen bg-gray-100">
     <!-- Search Bar -->
     <div class="relative z-20 flex justify-center w-full mt-[100px]">
-      <div
-        class="flex items-center w-full max-w-5xl px-2 py-2 bg-white border rounded-full shadow-xl border-stone-100 md:py-3"
-        style="box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10);"
-      >
-        <!-- Toggle Switch -->
+      <div class="flex items-center w-full max-w-5xl px-2 py-2 bg-white border rounded-full shadow-xl border-stone-100 md:py-3" style="box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10);">
         <div class="flex items-center justify-center mr-2">
           <div class="relative flex w-[180px] h-12 bg-[#F4F4F5] rounded-full p-1">
-            <button
-              class="flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200 bg-[#F62E56] text-white shadow"
-              disabled
-            >
+            <button class="flex-1 h-full rounded-full font-semibold font-inter transition-all duration-200 bg-[#F62E56] text-white shadow" disabled>
               Mua nhà
             </button>
           </div>
         </div>
-        <!-- Input -->
         <div class="flex items-center flex-1 h-12 min-w-0 px-4 bg-white rounded-full">
-          <input
-            v-model="keyword"
-            type="text"
-            placeholder="Tìm kiếm căn hộ"
-            class="w-full text-base bg-transparent font-inter focus:outline-none"
-            autocomplete="off"
-            @keyup.enter="handleSearch"
-          />
+          <input v-model="keyword" type="text" placeholder="Tìm kiếm căn hộ" class="w-full text-base bg-transparent font-inter focus:outline-none" autocomplete="off" @keyup.enter="handleSearch" />
         </div>
-        <!-- Dropdowns custom -->
         <div class="flex items-center">
-          <div
-            v-for="(field, idx) in dropdownFields"
-            :key="field.model"
-            class="relative flex items-center flex-shrink-0 h-full px-4 border-l border-stone-200"
-            :class="idx === 0 ? 'z-30' : ''"
-          >
-            <button
-              @click="toggleDropdown(field.model)"
-              class="flex items-center gap-2 bg-transparent focus:outline-none min-w-[110px] h-12"
+          <div v-for="(field, idx) in dropdownFields" :key="field.model" class="relative flex items-center flex-shrink-0 h-full px-4 border-l border-stone-200" :class="idx === 0 ? 'z-30' : ''">
+            <button @click="toggleDropdown(field.model)" class="flex items-center gap-2 bg-transparent focus:outline-none min-w-[110px] h-12"
               :class="{
                 'text-[#F62E56] font-semibold': dropdownOpen === field.model || searchValues[field.model] !== field.options[0],
                 'text-gray-700': !(dropdownOpen === field.model) && searchValues[field.model] === field.options[0]
@@ -50,27 +27,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <div
-              v-if="dropdownOpen === field.model"
-              class="absolute left-0 z-40 w-48 py-2 mt-2 bg-white border shadow-xl top-full rounded-xl border-stone-100"
-            >
-              <div
-                v-for="(option, i) in field.options"
-                :key="i"
-                @click="selectDropdownOption(field.model, option)"
-                class="px-4 py-2 cursor-pointer hover:bg-[#F4F4F5] rounded-lg transition"
-                :class="{'text-[#F62E56] font-semibold': searchValues[field.model] === option}"
-              >
+            <div v-if="dropdownOpen === field.model" class="absolute left-0 z-40 w-48 py-2 mt-2 bg-white border shadow-xl top-full rounded-xl border-stone-100">
+              <div v-for="(option, i) in field.options" :key="i" @click="selectDropdownOption(field.model, option)" class="px-4 py-2 cursor-pointer hover:bg-[#F4F4F5] rounded-lg transition"
+                :class="{'text-[#F62E56] font-semibold': searchValues[field.model] === option}">
                 {{ option }}
               </div>
             </div>
           </div>
         </div>
-        <!-- Search Button -->
-        <button
-          @click="handleSearch"
-          class="flex items-center gap-2 h-10 px-6 ml-2 bg-[#F62E56] text-white font-semibold rounded-full hover:bg-[#d9254a] transition-colors duration-200 focus:outline-none"
-        >
+        <button @click="handleSearch" class="flex items-center gap-2 h-10 px-6 ml-2 bg-[#F62E56] text-white font-semibold rounded-full hover:bg-[#d9254a] transition-colors duration-200 focus:outline-none">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8" stroke-width="2"></circle>
             <path stroke-linecap="round" stroke-width="2" d="M21 21l-4.35-4.35"></path>
@@ -86,13 +51,20 @@
         <span class="font-semibold">{{ totalResults }}</span> kết quả tìm kiếm cho
         <span class="font-semibold text-[#F62E56]">"Mua nhà {{ searchValues.location !== 'Vị trí' ? searchValues.location : '' }}"</span>
       </div>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <PropertyCard
-          v-for="property in paginatedProperties"
-          :key="property.id"
-          :product="property"
-          :to="`/buy/${property.id}`"
-        />
+      <div v-if="pending">Đang tải...</div>
+      <div v-else-if="error">Lỗi tải dữ liệu!</div>
+      <div v-else>
+        <div v-if="paginatedProperties.length === 0" class="container py-20 text-xl font-bold text-center text-red-500">
+          Không tìm thấy sản phẩm!
+        </div>
+        <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <PropertyCard
+            v-for="property in paginatedProperties"
+            :key="property.id"
+            :product="property"
+            :to="`/buy/${property.id}`"
+          />
+        </div>
       </div>
       <!-- Pagination -->
       <div class="flex justify-center mt-8">
@@ -111,27 +83,12 @@
         </nav>
       </div>
     </div>
-
-    <!-- Danh sách căn hộ bán -->
-    <div class="container py-8 mx-auto">
-      <h2 class="mb-4 text-2xl font-bold">Danh sách căn hộ bán</h2>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
-        <PropertyCard
-          v-for="property in filteredProperties"
-          :key="property.id"
-          :product="property"
-          :to="`/buy/${property.id}`"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { properties } from '~/data/properties'
 import PropertyCard from '~/components/PropertyCard.vue'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-
 
 // Search bar state
 const keyword = ref('')
@@ -155,8 +112,9 @@ const dropdownFields = [
     options: ['Số phòng', '1 phòng', '2 phòng', '3 phòng', '4+ phòng']
   }
 ]
+const currentPage = ref(1)
+const pageSize = 12
 
-// Dropdown logic
 function toggleDropdown(model) {
   dropdownOpen.value = dropdownOpen.value === model ? null : model
 }
@@ -179,13 +137,14 @@ onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleClickOutsideDropdown)
 })
 
-// Fake property data (36 items for 3 pages)
-const currentPage = ref(1)
-const pageSize = 12
+// Fetch properties data from API
+const { data: propertiesRaw, pending, error } = await useFetch('/api/properties')
+const properties = computed(() =>
+  Array.isArray(propertiesRaw.value) ? propertiesRaw.value.filter(p => p.type === 'sale') : []
+)
 
 const filteredProperties = computed(() => {
-  // Lọc theo search bar
-  let list = properties.filter((p) => {
+  let list = properties.value.filter((p) => {
     const matchKeyword = !keyword.value || p.name.toLowerCase().includes(keyword.value.toLowerCase())
     const matchLocation = searchValues.value.location === 'Vị trí' || p.location === searchValues.value.location
     const matchPrice =

@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="[
-      'fixed top-0 left-0 right-0 z-50 w-full bg-white transition-all duration-300 ease-in-out',
+      'fixed top-0 left-0 right-0 z-50 w-full bg-white transition-all duration-250 ease-in-out shadow',
       isScrolled ? 'shadow py-2' : 'py-6'
     ]"
   >
@@ -252,7 +252,7 @@ const profileBtn = ref(null)
 const dropdownMenu = ref(null)
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 4
+  isScrolled.value = window.scrollY > 2
 }
 
 function logout() {

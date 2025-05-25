@@ -1,26 +1,187 @@
 // components/PropertyCard.vue
 <template>
-  <NuxtLink :to="to" class="block group focus:outline-none">
-    <div class="flex flex-col overflow-hidden transition bg-white border border-gray-100 shadow-lg rounded-2xl hover:shadow-2xl group-hover:scale-[1.03]">
-      <img :src="product.images ? product.images[0] : product.image" class="object-cover w-full h-48" />
-      <div class="flex flex-col flex-1 p-4">
+  <NuxtLink :to="to" class="block h-full group focus:outline-none">
+    <div
+      class="flex flex-col h-full overflow-hidden transition bg-white border rounded-2xl shadow-lg hover:shadow-2xl group-hover:scale-[1.03] border-gray-200"
+    >
+      <!-- Ảnh -->
+      <img
+        :src="product.images ? product.images[0] : product.image"
+        class="object-cover w-full h-56 rounded-t-2xl"
+        alt="Ảnh căn hộ"
+      />
+      <!-- Nội dung -->
+      <div class="flex flex-col flex-1 px-6 pt-4 pb-0">
         <div class="mb-1 text-xs text-gray-400">Tin vừa cập nhật hôm nay</div>
-        <div class="mb-2 text-base font-bold line-clamp-2">{{ product.title || product.name }}</div>
-        <div class="flex items-center gap-2 mb-1 text-sm text-gray-600">
-          <svg class="w-4 h-4 text-[#F62E56]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17.657 16.657L13.414 12.414a4 4 0 10-1.414 1.414l4.243 4.243a1 1 0 001.414-1.414z"/></svg>
+        <div
+          class="mb-2 text-xl font-bold text-gray-900 line-clamp-2 font-inter"
+        >
+          {{ product.title || product.name }}
+        </div>
+        <!-- Địa chỉ -->
+        <div
+          class="flex items-center gap-2 mb-2 text-base text-gray-700 font-inter"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 20 20"
+            fill="none"
+            class="w-7 h-7"
+          >
+            <mask
+              id="mask0_2499_2956"
+              style="mask-type: alpha"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              width="20"
+              height="20"
+            >
+              <rect width="20" height="20" fill="#D9D9D9" />
+            </mask>
+            <g mask="url(#mask0_2499_2956)">
+              <path
+                d="M10.0044 10C10.4181 10 10.7708 9.85269 11.0625 9.55808C11.3542 9.26346 11.5 8.90929 11.5 8.49558C11.5 8.08186 11.3527 7.72917 11.0581 7.4375C10.7635 7.14583 10.4093 7 9.99558 7C9.58186 7 9.22917 7.14731 8.9375 7.44192C8.64583 7.73654 8.5 8.09071 8.5 8.50442C8.5 8.91814 8.64731 9.27083 8.94192 9.5625C9.23654 9.85417 9.59071 10 10.0044 10ZM10 16.0208C11.6528 14.5347 12.8993 13.1667 13.7396 11.9167C14.5799 10.6667 15 9.54861 15 8.5625C15 7.10417 14.5243 5.89583 13.5729 4.9375C12.6215 3.97917 11.4306 3.5 10 3.5C8.56944 3.5 7.37847 3.97917 6.42708 4.9375C5.47569 5.89583 5 7.10417 5 8.5625C5 9.54861 5.42014 10.6667 6.26042 11.9167C7.10069 13.1667 8.34722 14.5347 10 16.0208ZM10 18C7.81979 16.1791 6.1914 14.4877 5.11483 12.926C4.03828 11.3642 3.5 9.90972 3.5 8.5625C3.5 6.70139 4.11806 5.14236 5.35417 3.88542C6.59028 2.62847 8.13542 2 9.98958 2C11.8438 2 13.3924 2.62847 14.6354 3.88542C15.8785 5.14236 16.5 6.70139 16.5 8.5625C16.5 9.90972 15.9653 11.3611 14.8958 12.9167C13.8264 14.4722 12.1944 16.1667 10 18Z"
+                fill="#3D5F7B"
+              />
+            </g>
+          </svg>
           {{ product.location }}
         </div>
-        <div class="flex flex-wrap gap-2 mb-1 text-sm text-gray-600">
-          <span><b>{{ product.rooms || (product.bedrooms + 'PN/' + product.bathrooms + 'WC') }}</b></span>
-          <span><b>{{ product.area }}m²</b></span>
-          <span v-if="product.direction"><b>{{ product.direction }}</b></span>
-          <span v-if="product.block"><b>{{ product.block }}</b></span>
-        </div>
-        <div class="pt-2 mt-auto border-t">
-          <div class="text-[#F62E56] font-bold text-lg">
-            {{ formatPrice(product.price) }}
-            <span v-if="product.type === 'rent' || isRent" class="text-base font-normal">/tháng</span>
+        <!-- Thông số -->
+        <div
+          class="grid grid-cols-2 gap-x-2 gap-y-1 mb-2 text-base text-[#374151] font-inter"
+        >
+          <div class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <mask
+                id="mask0_2499_2963"
+                style="mask-type: alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+              >
+                <rect width="20" height="20" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_2499_2963)">
+                <path
+                  d="M4.5 18C3.80556 18 3.21528 17.7569 2.72917 17.2708C2.24306 16.7847 2 16.1944 2 15.5C2 14.9583 2.16667 14.4722 2.5 14.0417C2.83333 13.6111 3.25 13.2986 3.75 13.1042V6.85417C3.25 6.65972 2.83333 6.35069 2.5 5.92708C2.16667 5.50347 2 5.02778 2 4.5C2 3.79167 2.24306 3.19792 2.72917 2.71875C3.21528 2.23958 3.80556 2 4.5 2C5.04167 2 5.52431 2.16319 5.94792 2.48958C6.37153 2.81597 6.68056 3.23611 6.875 3.75H13.1458C13.3264 3.22222 13.6319 2.79861 14.0625 2.47917C14.4931 2.15972 14.9722 2 15.5 2C16.2083 2 16.8021 2.23958 17.2812 2.71875C17.7604 3.19792 18 3.79167 18 4.5C18 5.02778 17.8403 5.50694 17.5208 5.9375C17.2014 6.36806 16.7778 6.67361 16.25 6.85417V13.125C16.7639 13.3194 17.184 13.6285 17.5104 14.0521C17.8368 14.4757 18 14.9583 18 15.5C18 16.1944 17.7604 16.7847 17.2812 17.2708C16.8021 17.7569 16.2083 18 15.5 18C14.9722 18 14.4931 17.8333 14.0625 17.5C13.6319 17.1667 13.3194 16.75 13.125 16.25H6.875C6.68056 16.75 6.37153 17.1667 5.94792 17.5C5.52431 17.8333 5.04167 18 4.5 18ZM4.5 5.5C4.78333 5.5 5.02083 5.40417 5.2125 5.2125C5.40417 5.02083 5.5 4.78333 5.5 4.5C5.5 4.21667 5.40417 3.97917 5.2125 3.7875C5.02083 3.59583 4.78333 3.5 4.5 3.5C4.21667 3.5 3.97917 3.59583 3.7875 3.7875C3.59583 3.97917 3.5 4.21667 3.5 4.5C3.5 4.78333 3.59583 5.02083 3.7875 5.2125C3.97917 5.40417 4.21667 5.5 4.5 5.5ZM15.5 5.5C15.7833 5.5 16.0208 5.40417 16.2125 5.2125C16.4042 5.02083 16.5 4.78333 16.5 4.5C16.5 4.21667 16.4042 3.97917 16.2125 3.7875C16.0208 3.59583 15.7833 3.5 15.5 3.5C15.2167 3.5 14.9792 3.59583 14.7875 3.7875C14.5958 3.97917 14.5 4.21667 14.5 4.5C14.5 4.78333 14.5958 5.02083 14.7875 5.2125C14.9792 5.40417 15.2167 5.5 15.5 5.5ZM6.875 14.75H13.1458C13.2788 14.3607 13.4857 14.0238 13.7664 13.7393C14.0471 13.4548 14.375 13.2431 14.75 13.1042V6.85417C14.375 6.71528 14.0443 6.5077 13.758 6.23144C13.4716 5.95519 13.2606 5.62804 13.125 5.25H6.875C6.74203 5.62804 6.53517 5.95519 6.25444 6.23144C5.9737 6.5077 5.63889 6.71528 5.25 6.85417V13.125C5.63585 13.2586 5.96975 13.4663 6.25171 13.7483C6.53368 14.0302 6.74144 14.3642 6.875 14.75ZM15.5 16.5C15.7833 16.5 16.0208 16.4042 16.2125 16.2125C16.4042 16.0208 16.5 15.7833 16.5 15.5C16.5 15.2167 16.4042 14.9792 16.2125 14.7875C16.0208 14.5958 15.7833 14.5 15.5 14.5C15.2167 14.5 14.9792 14.5958 14.7875 14.7875C14.5958 14.9792 14.5 15.2167 14.5 15.5C14.5 15.7833 14.5958 16.0208 14.7875 16.2125C14.9792 16.4042 15.2167 16.5 15.5 16.5ZM4.5 16.5C4.78333 16.5 5.02083 16.4042 5.2125 16.2125C5.40417 16.0208 5.5 15.7833 5.5 15.5C5.5 15.2167 5.40417 14.9792 5.2125 14.7875C5.02083 14.5958 4.78333 14.5 4.5 14.5C4.21667 14.5 3.97917 14.5958 3.7875 14.7875C3.59583 14.9792 3.5 15.2167 3.5 15.5C3.5 15.7833 3.59583 16.0208 3.7875 16.2125C3.97917 16.4042 4.21667 16.5 4.5 16.5Z"
+                  fill="#3D5F7B"
+                />
+              </g>
+            </svg>
+            <span>{{
+              product.rooms ||
+              product.bedrooms + "PN/" + product.bathrooms + "WC"
+            }}</span>
           </div>
+          <div class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <mask
+                id="mask0_2499_2974"
+                style="mask-type: alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+              >
+                <rect width="20" height="20" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_2499_2974)">
+                <path
+                  d="M2.5 17.5V15.8333H4.16667V2.5H12.5V3.33333H15.8333V15.8333H17.5V17.5H14.1667V5H12.5V17.5H2.5ZM9.16667 10.8333C9.40278 10.8333 9.60069 10.7535 9.76042 10.5938C9.92014 10.434 10 10.2361 10 10C10 9.76389 9.92014 9.56597 9.76042 9.40625C9.60069 9.24653 9.40278 9.16667 9.16667 9.16667C8.93056 9.16667 8.73264 9.24653 8.57292 9.40625C8.41319 9.56597 8.33333 9.76389 8.33333 10C8.33333 10.2361 8.41319 10.434 8.57292 10.5938C8.73264 10.7535 8.93056 10.8333 9.16667 10.8333ZM5.83333 15.8333H10.8333V4.16667H5.83333V15.8333Z"
+                  fill="#3D5F7B"
+                />
+              </g>
+            </svg>
+            <span>{{ formatArea(product.area) }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <mask
+                id="mask0_2499_2968"
+                style="mask-type: alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+              >
+                <rect width="20" height="20" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_2499_2968)">
+                <path
+                  d="M3.20801 16.6474V6.06409H6.20801V3.06409H13.2913V9.06409H16.7913V16.6474H11.208V13.6474H8.7913V16.6474H3.20801ZM4.2913 15.5641H6.20801V13.6474H4.2913V15.5641ZM4.2913 12.3141H6.20801V10.3974H4.2913V12.3141ZM4.2913 9.06409H6.20801V7.1474H4.2913V9.06409ZM7.2913 12.3141H9.20801V10.3974H7.2913V12.3141ZM7.2913 9.06409H9.20801V7.1474H7.2913V9.06409ZM7.2913 6.06409H9.20801V4.1474H7.2913V6.06409ZM10.2913 12.3141H12.208V10.3974H10.2913V12.3141ZM10.2913 9.06409H12.208V7.1474H10.2913V9.06409ZM10.2913 6.06409H12.208V4.1474H10.2913V6.06409ZM13.7913 15.5641H15.708V13.6474H13.7913V15.5641ZM13.7913 12.3141H15.708V10.3974H13.7913V12.3141Z"
+                  fill="#3D5F7B"
+                />
+              </g>
+            </svg>
+            <span>{{ product.direction }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+            >
+              <mask
+                id="mask0_2499_2979"
+                style="mask-type: alpha"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+              >
+                <rect width="20" height="20" fill="#D9D9D9" />
+              </mask>
+              <g mask="url(#mask0_2499_2979)">
+                <path
+                  d="M5.75049 14.25L11.7713 11.7708L14.2505 5.75L8.22966 8.22917L5.75049 14.25ZM10.0005 11C9.72271 11.0139 9.4866 10.9201 9.29216 10.7188C9.09771 10.5174 9.00049 10.2778 9.00049 10C9.00049 9.72222 9.09632 9.48611 9.28799 9.29167C9.47965 9.09722 9.71715 9 10.0005 9C10.2838 9 10.5213 9.09583 10.713 9.2875C10.9047 9.47917 11.0005 9.71667 11.0005 10C11.0005 10.2833 10.9047 10.5208 10.713 10.7125C10.5213 10.9042 10.2838 11 10.0005 11ZM10.0062 18C8.90518 18 7.86854 17.7917 6.89632 17.375C5.9241 16.9583 5.07341 16.3854 4.34424 15.6562C3.61507 14.9271 3.04216 14.0767 2.62549 13.105C2.20882 12.1334 2.00049 11.0952 2.00049 9.99046C2.00049 8.88571 2.20882 7.85069 2.62549 6.88542C3.04216 5.92014 3.61507 5.07292 4.34424 4.34375C5.07341 3.61458 5.92381 3.04167 6.89545 2.625C7.8671 2.20833 8.90529 2 10.01 2C11.1148 2 12.1498 2.20833 13.1151 2.625C14.0803 3.04167 14.9276 3.61458 15.6567 4.34375C16.3859 5.07292 16.9588 5.92169 17.3755 6.89008C17.7922 7.85849 18.0005 8.89321 18.0005 9.99425C18.0005 11.0953 17.7922 12.1319 17.3755 13.1042C16.9588 14.0764 16.3859 14.9271 15.6567 15.6562C14.9276 16.3854 14.0788 16.9583 13.1104 17.375C12.142 17.7917 11.1073 18 10.0062 18ZM10.0005 16.5C11.806 16.5 13.3408 15.8681 14.6047 14.6042C15.8685 13.3403 16.5005 11.8056 16.5005 10C16.5005 8.19444 15.8685 6.65972 14.6047 5.39583C13.3408 4.13194 11.806 3.5 10.0005 3.5C8.19493 3.5 6.66021 4.13194 5.39632 5.39583C4.13243 6.65972 3.50049 8.19444 3.50049 10C3.50049 11.8056 4.13243 13.3403 5.39632 14.6042C6.66021 15.8681 8.19493 16.5 10.0005 16.5Z"
+                  fill="#3D5F7B"
+                />
+              </g>
+            </svg>
+            <span>Block {{ product.block }}</span>
+          </div>
+        </div>
+      </div>
+      <!-- Giá -->
+      <div class="pt-3 pb-4 mt-auto border-t">
+        <div class="flex items-center justify-center gap-1 font-inter">
+          <span class="text-lg font-bold text-[#F62E56]">
+            {{ formatPrice(product.price) }}
+          </span>
+          <span
+            v-if="product.type === 'rent' || isRent"
+            class="text-sm font-normal text-gray-500"
+            >/tháng</span
+          >
         </div>
       </div>
     </div>
@@ -31,12 +192,18 @@
 const props = defineProps({
   product: { type: Object, required: true },
   to: { type: [String, Object], required: true },
-  isRent: { type: Boolean, default: false }
-})
+  isRent: { type: Boolean, default: false },
+});
 
 function formatPrice(price) {
-  if (typeof price === 'number') return price.toLocaleString('vi-VN') + ' VNĐ'
-  return price
+  if (typeof price === "number") return price.toLocaleString("vi-VN") + " VNĐ";
+  return price;
+}
+function formatArea(area) {
+  if (!area) return "";
+  if (typeof area === "number") return area + "m²";
+  if (typeof area === "string" && !area.includes("m")) return area + "m²";
+  return area;
 }
 </script>
 
@@ -46,5 +213,23 @@ function formatPrice(price) {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+@media (max-width: 768px) {
+  .text-xl {
+    font-size: 1.1rem;
+  }
+  .text-base {
+    font-size: 1rem;
+  }
+  .px-6 {
+    padding-left: 1.1rem !important;
+    padding-right: 1.1rem !important;
+  }
+  .h-56 {
+    height: 200px !important;
+  }
 }
 </style>
