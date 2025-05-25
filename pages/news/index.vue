@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen pb-12 bg-white">
-    <div class="flex flex-col gap-10 px-6 pt-10 pb-0 mx-auto max-w-7xl md:flex-row">
+  <div class="min-h-screen pt-12 pb-12 bg-white">
+    <div class="flex flex-col gap-10 px-6 pb-0 mx-auto max-w-7xl md:flex-row">
       <!-- Main content -->
       <div class="flex-1 w-full">
         <!-- Featured news -->

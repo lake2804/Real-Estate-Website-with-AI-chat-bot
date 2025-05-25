@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen pt-10 bg-gray-50">
     <!-- Breadcrumb -->
     <div class="container px-4 py-2 mx-auto text-sm text-gray-500">
       <span class="hover:text-[#F62E56] cursor-pointer"><NuxtLink to="/">Trang chủ</NuxtLink></span>
